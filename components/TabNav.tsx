@@ -26,7 +26,6 @@ interface TabNavProps {
     onTabChange: (tab: TabId) => void;
 }
 
-// Memoized tab button for performance
 const TabButton = memo(function TabButton({
     tab,
     isActive,
@@ -40,44 +39,49 @@ const TabButton = memo(function TabButton({
         <button
             onClick={onClick}
             className={`
-        relative px-3 md:px-5 py-2.5 text-xs md:text-sm tracking-wider
-        transition-colors duration-200 ease-out
-        ${isActive ? "text-parchment" : "text-stone-gray hover:text-parchment-muted"}
-      `}
+                relative px-3 md:px-5 py-3 text-xs md:text-sm tracking-wider
+                brush-tab tab-hover-wiggle
+                transition-colors duration-200 ease-out
+                ${isActive
+                    ? "active text-parchment font-bold"
+                    : "text-charcoal hover:text-ink-black"
+                }
+            `}
             style={{ willChange: "transform" }}
         >
-            {/* Active background - simple CSS transition */}
-            <span
-                className={`
-          absolute inset-0 rounded-md transition-all duration-300 ease-out
-          ${isActive
-                        ? "bg-crimson/20 border border-crimson/50 opacity-100"
-                        : "opacity-0"
-                    }
-        `}
-            />
-
             {/* Tab content */}
-            <span className="relative z-10 flex items-center gap-2">
+            <span className="relative z-10 flex items-center gap-1.5 md:gap-2">
                 <span
                     className={`
-            hidden md:inline text-base font-serif
-            transition-colors duration-200
-            ${isActive ? "text-crimson" : "text-stone-gray"}
-          `}
+                        hidden md:inline text-base font-serif transition-colors transition-transform duration-300
+                        ${isActive
+                            ? "text-gold-muted kanji-glow scale-110"
+                            : "text-stone-gray"
+                        }
+                    `}
                 >
                     {tab.kanji}
                 </span>
-                <span>{tab.label}</span>
+                <span className="font-heading-scrap text-xs md:text-sm uppercase tracking-widest">
+                    {tab.label}
+                </span>
             </span>
 
-            {/* Active underline */}
+            {/* Active ink-stroke underline */}
             <span
                 className={`
-          absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full bg-crimson
-          transition-all duration-300 ease-out
-          ${isActive ? "w-3/5 opacity-100" : "w-0 opacity-0"}
-        `}
+                    absolute bottom-1 left-1/2 -translate-x-1/2 h-[3px] rounded-sm
+                    transition-[width,opacity,background-color] duration-300 ease-out
+                    ${isActive
+                        ? "w-3/5 opacity-100 bg-gold-muted"
+                        : "w-0 opacity-0 bg-crimson"
+                    }
+                `}
+                style={{
+                    clipPath: isActive
+                        ? "polygon(0% 0%, 100% 20%, 98% 100%, 2% 80%)"
+                        : "none",
+                }}
             />
         </button>
     );
@@ -95,11 +99,11 @@ export function TabNav({ activeTab, onTabChange }: TabNavProps) {
 
     return (
         <nav
-            className="fixed top-0 left-0 right-0 z-50 bg-ink-black/95 backdrop-blur-md border-b border-fog/50"
+            className="fixed top-0 left-0 right-0 z-50 nav-parchment"
             style={{ willChange: "transform" }}
         >
             <div className="container">
-                <ul className="flex items-center justify-center gap-0.5 md:gap-1 py-2.5 overflow-x-auto scrollbar-hide">
+                <ul className="flex items-center justify-center gap-0 md:gap-0.5 py-2 overflow-x-auto scrollbar-hide">
                     {tabs.map((tab) => (
                         <li key={tab.id}>
                             <TabButton
@@ -115,7 +119,7 @@ export function TabNav({ activeTab, onTabChange }: TabNavProps) {
     );
 }
 
-// Optimized page transition variants - using transform for GPU acceleration
+// Page transition variants
 export const pageTransitionVariants = {
     initial: (direction: number) => ({
         opacity: 0,
@@ -126,7 +130,7 @@ export const pageTransitionVariants = {
         x: 0,
         transition: {
             duration: 0.35,
-            ease: [0.25, 0.1, 0.25, 1] as const, // Smooth ease-out curve
+            ease: [0.25, 0.1, 0.25, 1] as const,
         },
     },
     exit: (direction: number) => ({
@@ -139,7 +143,6 @@ export const pageTransitionVariants = {
     }),
 };
 
-// Get direction based on tab change
 export function getTabDirection(fromTab: TabId, toTab: TabId): number {
     const fromIndex = tabs.findIndex((t) => t.id === fromTab);
     const toIndex = tabs.findIndex((t) => t.id === toTab);

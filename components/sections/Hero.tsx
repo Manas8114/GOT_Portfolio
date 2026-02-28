@@ -1,110 +1,29 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { personalInfo } from "@/lib/data";
-
-interface Particle {
-    id: number;
-    x: number;
-    y: number;
-    size: number;
-    duration: number;
-    delay: number;
-    opacity: number;
-    drift: number;
-}
-
-interface RainDrop {
-    id: number;
-    x: number;
-    delay: number;
-    duration: number;
-    opacity: number;
-}
+import { useState, useEffect, useRef } from "react";
+import { useSound } from "@/components/SoundSystem";
 
 export default function Hero() {
-    const [particles, setParticles] = useState<Particle[]>([]);
-    const [rainDrops, setRainDrops] = useState<RainDrop[]>([]);
-    const [textRevealed, setTextRevealed] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const [mounted, setMounted] = useState(false);
+    const containerRef = useRef<HTMLElement>(null);
+    const { playSound } = useSound();
 
-    const { scrollY } = useScroll();
-    const y = useTransform(scrollY, [0, 500], [0, 150]);
-    const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-    const scale = useTransform(scrollY, [0, 300], [1, 0.95]);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"]
+    });
 
-    // Smooth spring physics for parallax
-    const smoothY = useSpring(y, { stiffness: 100, damping: 30 });
+    // Parallax values for different layers
+    const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+    const textY = useTransform(scrollYProgress, [0, 1], ["0%", "150%"]);
+    const elementsY = useTransform(scrollYProgress, [0, 1], ["0%", "80%"]);
 
     useEffect(() => {
-        // Wind-driven particles (leaves/petals)
-        const newParticles: Particle[] = [];
-        for (let i = 0; i < 25; i++) {
-            newParticles.push({
-                id: i,
-                x: Math.random() * 100,
-                y: Math.random() * 100,
-                size: Math.random() * 6 + 3,
-                duration: Math.random() * 15 + 20,
-                delay: Math.random() * 8,
-                opacity: Math.random() * 0.4 + 0.2,
-                drift: Math.random() * 200 - 100,
-            });
-        }
-        setParticles(newParticles);
-
-        // Rain drops (subtle, atmospheric)
-        const drops: RainDrop[] = [];
-        for (let i = 0; i < 40; i++) {
-            drops.push({
-                id: i,
-                x: Math.random() * 100,
-                delay: Math.random() * 3,
-                duration: Math.random() * 0.8 + 0.5,
-                opacity: Math.random() * 0.15 + 0.05,
-            });
-        }
-        setRainDrops(drops);
-
-        // Trigger text reveal after mount
-        const timer = setTimeout(() => setTextRevealed(true), 500);
-        return () => clearTimeout(timer);
+        setMounted(true);
     }, []);
 
-    // Ink reveal animation variants
-    const inkReveal = {
-        hidden: {
-            opacity: 0,
-            y: 30,
-            filter: "blur(10px)",
-        },
-        visible: (delay: number) => ({
-            opacity: 1,
-            y: 0,
-            filter: "blur(0px)",
-            transition: {
-                duration: 1.2,
-                delay,
-                ease: "easeOut" as const,
-            },
-        }),
-    };
-
-    const letterReveal = {
-        hidden: { opacity: 0, y: 50, rotateX: -90 },
-        visible: (i: number) => ({
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            transition: {
-                duration: 0.8,
-                delay: 0.8 + i * 0.05,
-                ease: "easeOut" as const,
-            },
-        }),
-    };
 
     const title = "Building Systems";
     const subtitle = "That Matter";
@@ -113,240 +32,135 @@ export default function Hero() {
         <section
             id="hero"
             ref={containerRef}
-            className="relative min-h-screen flex items-center justify-center overflow-hidden"
-            style={{ background: "var(--ink-black)" }}
+            className="relative min-h-screen flex items-center w-full overflow-hidden pt-20"
+            style={{ background: "transparent" }}
         >
-            {/* Parallax Background Layer */}
-            {/* Parallax Background Layer */}
+            {/* Parallax Background */}
             <motion.div
-                className="absolute inset-0 z-0"
-                style={{ y: smoothY }}
+                className="absolute inset-0 pointer-events-none z-[-1]"
+                style={{ y: bgY }}
             >
-                <Image
-                    src="/images/hero-path.png"
-                    alt="Lonely samurai silhouette on a hill"
-                    fill
-                    priority
-                    className="object-cover opacity-60"
-                    quality={90}
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-ink-black/30 via-transparent to-ink-black/90" />
+                {/* We can add an actual background image here if needed, but for now it's transparent */}
             </motion.div>
 
-            {/* Rain Effect (atmospheric, inspired by artwork) */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {rainDrops.map((drop) => (
-                    <motion.div
-                        key={drop.id}
-                        className="absolute w-px"
-                        style={{
-                            left: `${drop.x}%`,
-                            top: "-20px",
-                            height: "15px",
-                            background: `linear-gradient(to bottom, transparent, rgba(245, 240, 232, ${drop.opacity}))`,
-                        }}
-                        animate={{
-                            y: ["0vh", "110vh"],
-                        }}
-                        transition={{
-                            duration: drop.duration,
-                            delay: drop.delay,
-                            repeat: Infinity,
-                            ease: "linear",
-                        }}
-                    />
-                ))}
-            </div>
-
-            {/* Wind-driven Particles */}
-            <div className="absolute inset-0 pointer-events-none">
-                {particles.map((particle) => (
-                    <motion.div
-                        key={particle.id}
-                        className="absolute rounded-full"
-                        style={{
-                            left: `${particle.x}%`,
-                            bottom: "-5%",
-                            width: particle.size,
-                            height: particle.size,
-                            background: `radial-gradient(circle, var(--parchment-muted), transparent)`,
-                        }}
-                        animate={{
-                            y: [0, -window.innerHeight * 1.3],
-                            x: [0, particle.drift],
-                            opacity: [0, particle.opacity, particle.opacity, 0],
-                            rotate: [0, 360],
-                            scale: [0.5, 1, 0.8],
-                        }}
-                        transition={{
-                            duration: particle.duration,
-                            delay: particle.delay,
-                            repeat: Infinity,
-                            ease: "easeOut",
-                        }}
-                    />
-                ))}
-            </div>
-
-            {/* Mist/Fog layers */}
+            {/* Draggable Background Elements (The Collage) */}
             <motion.div
-                className="absolute inset-0 pointer-events-none"
-                animate={{
-                    opacity: [0.3, 0.5, 0.3],
-                }}
-                transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                }}
-                style={{
-                    background:
-                        "radial-gradient(ellipse at 50% 100%, rgba(42, 42, 42, 0.6) 0%, transparent 50%)",
-                }}
-            />
-
-            {/* Content */}
-            <motion.div
-                className="container relative z-10 text-center"
-                style={{ opacity, scale }}
+                className="absolute inset-0 pointer-events-none z-0 overflow-visible"
+                style={{ y: elementsY }}
             >
-                {/* Japanese Characters - Ink Reveal */}
-                <motion.p
-                    className="kanji text-2xl md:text-4xl mb-6"
-                    style={{ color: "#4a4a4a" }}
-                    variants={inkReveal}
-                    initial="hidden"
-                    animate={textRevealed ? "visible" : "hidden"}
-                    custom={0}
-                >
-                    大道無門
-                </motion.p>
-
-                {/* Tagline */}
-                <motion.p
-                    className="text-sm md:text-base tracking-[0.3em] uppercase mb-8"
-                    style={{ color: "#4a4a4a" }}
-                    variants={inkReveal}
-                    initial="hidden"
-                    animate={textRevealed ? "visible" : "hidden"}
-                    custom={0.3}
-                >
-                    The Path Has No Gate
-                </motion.p>
-
-                {/* Main Title - Letter by letter reveal */}
-                <div className="overflow-hidden mb-2">
-                    <motion.h1
-                        className="heading-xl inline-flex flex-wrap justify-center"
-                        style={{
-                            fontFamily: "var(--font-noto-serif)",
-                            color: "var(--parchment)",
-                        }}
-                    >
-                        {title.split("").map((char, i) => (
-                            <motion.span
-                                key={i}
-                                variants={letterReveal}
-                                initial="hidden"
-                                animate={textRevealed ? "visible" : "hidden"}
-                                custom={i}
-                                style={{ display: "inline-block" }}
-                            >
-                                {char === " " ? "\u00A0" : char}
-                            </motion.span>
-                        ))}
-                    </motion.h1>
-                </div>
-
-                {/* Subtitle with crimson */}
-                <div className="overflow-hidden mb-6">
-                    <motion.h1
-                        className="heading-xl inline-flex flex-wrap justify-center"
-                        style={{
-                            fontFamily: "var(--font-noto-serif)",
-                            color: "var(--crimson)",
-                        }}
-                    >
-                        {subtitle.split("").map((char, i) => (
-                            <motion.span
-                                key={i}
-                                variants={letterReveal}
-                                initial="hidden"
-                                animate={textRevealed ? "visible" : "hidden"}
-                                custom={i + title.length}
-                                style={{ display: "inline-block" }}
-                            >
-                                {char === " " ? "\u00A0" : char}
-                            </motion.span>
-                        ))}
-                    </motion.h1>
-                </div>
-
-                {/* Role Description */}
-                <motion.p
-                    className="body-lg max-w-2xl mx-auto mb-4"
-                    style={{ color: "#6b6b6b" }}
-                    variants={inkReveal}
-                    initial="hidden"
-                    animate={textRevealed ? "visible" : "hidden"}
-                    custom={1.5}
-                >
-                    {personalInfo.tagline}
-                </motion.p>
-
-                <motion.p
-                    className="body-base max-w-xl mx-auto mb-12"
-                    style={{ color: "#4a4a4a" }}
-                    variants={inkReveal}
-                    initial="hidden"
-                    animate={textRevealed ? "visible" : "hidden"}
-                    custom={1.8}
-                >
-                    Data Science • Machine Learning • Full-Stack Development
-                </motion.p>
-
-                {/* CTA */}
+                {/* Element 1: Torn Paper */}
                 <motion.div
-                    variants={inkReveal}
-                    initial="hidden"
-                    animate={textRevealed ? "visible" : "hidden"}
-                    custom={2.2}
+                    drag
+                    onDragStart={() => playSound("hover")}
+                    dragConstraints={{ left: -50, right: 350, top: -50, bottom: 500 }}
+                    whileDrag={{ scale: 1.1, rotate: -2, cursor: "grabbing", zIndex: 100 }}
+                    className="absolute top-[10%] left-[5%] w-48 h-64 md:w-64 md:h-80 bg-parchment-muted pointer-events-auto cursor-grab"
+                    style={{
+                        clipPath: "polygon(2% 2%, 98% 5%, 95% 98%, 5% 95%)",
+                        boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
+                        rotate: "-6deg"
+                    }}
                 >
-                    <motion.a
-                        href="#about"
-                        className="btn btn-outline group flex items-center gap-2"
-                        whileHover={{ scale: 1.05, borderColor: "var(--crimson)" }}
-                        whileTap={{ scale: 0.98 }}
-                    >
-                        <span>Explore My Journey</span>
-                        <motion.span
-                            animate={{ x: [0, 5, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                            →
-                        </motion.span>
-                    </motion.a>
+                    <div className="w-full h-full border-[3px] border-crimson/40 m-2" />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                        <span className="font-heading-scrap text-8xl rotate-90 tracking-widest text-ink-black">RONIN</span>
+                    </div>
+                </motion.div>
+
+                {/* Element 2: Kanji Calligraphy */}
+                <motion.div
+                    drag
+                    onDragStart={() => playSound("click")}
+                    dragConstraints={{ left: -400, right: 100, top: -100, bottom: 400 }}
+                    whileDrag={{ scale: 1.15, rotate: 15, cursor: "grabbing", zIndex: 100 }}
+                    className="absolute top-[30%] right-[10%] p-6 md:p-10 bg-parchment pointer-events-auto cursor-grab shadow-2xl border-2 border-charcoal"
+                    style={{ rotate: "12deg" }}
+                >
+                    <div className="scrap-tape top-[-10px] left-[50%] w-16 h-8 -translate-x-1/2 rotate-[-5deg]" />
+                    <p className="kanji text-5xl md:text-7xl text-ink-black opacity-90" style={{ writingMode: "vertical-rl" }}>大道無門</p>
+                </motion.div>
+
+                {/* Element 3: Abstract Shape */}
+                <motion.div
+                    drag
+                    onDragStart={() => playSound("hover")}
+                    dragConstraints={{ left: -200, right: 200, top: -200, bottom: 500 }}
+                    whileDrag={{ scale: 1.1, rotate: 45, cursor: "grabbing", zIndex: 100 }}
+                    className="absolute bottom-[20%] left-[30%] w-32 h-32 md:w-48 md:h-48 bg-crimson pointer-events-auto cursor-grab shadow-xl border-4 border-ink-black"
+                    style={{ borderRadius: "40% 60% 70% 30% / 40% 50% 60% 50%", opacity: 0.85, mixBlendMode: "hard-light" }}
+                >
+                </motion.div>
+
+                {/* Element 4: Floating Stamp */}
+                <motion.div
+                    drag
+                    onDragStart={() => playSound("click")}
+                    dragConstraints={{ left: -200, right: 200, top: -400, bottom: 200 }}
+                    whileDrag={{ scale: 1.2, rotate: -30, cursor: "grabbing", zIndex: 100 }}
+                    className="absolute bottom-[10%] right-[25%] w-24 h-24 rounded-full border-4 border-gold-muted pointer-events-auto cursor-grab flex items-center justify-center"
+                    style={{ rotate: "-25deg" }}
+                >
+                    <span className="font-heading-scrap text-sm text-gold-muted text-center leading-none">AI / ML<br />ENGINEER</span>
                 </motion.div>
             </motion.div>
 
-            {/* Bottom Gradient Fade */}
-            <div
-                className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
-                style={{
-                    background:
-                        "linear-gradient(to top, var(--ink-black) 0%, transparent 100%)",
-                }}
-            />
+            {/* Main Content */}
+            <div className="container relative z-10 flex flex-col justify-center items-start lg:w-3/4 mx-auto mt-10 md:mt-20">
+                <motion.div
+                    initial={{ opacity: 0, y: 50, rotate: -5 }}
+                    animate={{ opacity: 1, y: 0, rotate: -2 }}
+                    transition={{ duration: 0.8, ease: "backOut" }}
+                    className="bg-parchment p-4 md:p-10 shadow-[8px_8px_0px_#0D0D0D] relative border-4 border-ink-black mb-8 inline-block select-none transform hover:rotate-0 transition-transform duration-300"
+                >
+                    <div className="scrap-tape top-[-20px] left-[-20px] w-24 h-10 rotate-[-15deg]" />
+                    <div className="scrap-tape bottom-[-20px] right-[-20px] w-24 h-10 rotate-[-15deg]" />
+                    <p className="font-heading-scrap text-5xl md:text-7xl xl:text-8xl text-ink-black leading-none mb-4 md:mb-6">
+                        {title.toUpperCase()}
+                    </p>
+                    <p className="font-heading-scrap text-5xl md:text-7xl xl:text-8xl text-crimson leading-none">
+                        <span className="brush-highlight text-parchment px-4 py-2">{subtitle.toUpperCase()}</span>
+                    </p>
+                </motion.div>
 
-            {/* Side Vignette */}
-            <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                    background: `
-            linear-gradient(90deg, var(--ink-black) 0%, transparent 15%, transparent 85%, var(--ink-black) 100%)
-          `,
-                }}
-            />
+                {/* Bio card */}
+                <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3, ease: "backOut" }}
+                    className="bg-charcoal text-parchment p-6 md:p-8 max-w-xl shadow-[6px_6px_0px_var(--crimson)] relative mt-4 rotate-2 border-2 border-ink-black z-20 select-none transform hover:rotate-1 transition-transform duration-300"
+                >
+                    <div className="scrap-tape top-[-10px] right-[20px] w-20 h-8 rotate-[10deg]" />
+                    <p className="font-body-scrap text-lg md:text-xl font-bold mb-4 text-parchment leading-relaxed uppercase tracking-wide">
+                        {personalInfo.tagline}
+                    </p>
+                    <div className="h-[3px] w-full bg-crimson opacity-80 mb-4" />
+                    <p className="font-heading-scrap text-sm text-stone-gray mb-1">SPECIALTIES:</p>
+                    <p className="font-body-scrap text-sm text-gold-muted font-bold tracking-widest">
+                        Data Science // Machine Learning // Full-Stack
+                    </p>
+                </motion.div>
+
+                {/* CTA */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                    className="mt-16 md:ml-auto z-30"
+                >
+                    <button
+                        onClick={() => {
+                            const event = new HashChangeEvent('hashchange');
+                            window.location.hash = '#battles';
+                            window.dispatchEvent(event);
+                        }}
+                        className="inline-block px-8 py-4 bg-crimson text-parchment font-heading-scrap text-xl md:text-2xl border-4 border-ink-black shadow-[6px_6px_0px_#0D0D0D] transition-colors transition-transform transition-shadow hover:bg-ink-black hover:text-crimson hover:translate-x-1 hover:translate-y-1 hover:shadow-none uppercase cursor-pointer"
+                    >
+                        EXPLORE THE WORK →
+                    </button>
+                </motion.div>
+            </div>
+            {/* Some noisy foreground element */}
+            <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-ink-black to-transparent pointer-events-none z-40 opacity-90" />
         </section >
     );
 }

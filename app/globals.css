@@ -55,6 +55,8 @@
   --color-stone-gray: var(--stone-gray);
   --font-serif: var(--font-noto-serif);
   --font-sans: var(--font-inter);
+  --font-space: var(--font-space);
+  --font-archivo: var(--font-archivo);
 }
 
 /* ================================
@@ -434,8 +436,8 @@ a:hover {
 
 .glass {
   background: rgba(26, 26, 26, 0.8);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--fog);
 }
 
@@ -471,4 +473,284 @@ a:hover {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ================================
+   SCRAPBOOK / KIDSUPER AESTHETICS
+   ================================ */
+
+.paper-texture {
+  position: relative;
+}
+
+.paper-texture::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+.polaroid-card {
+  background: var(--parchment);
+  color: var(--ink-black);
+  padding: 1rem 1rem 3rem 1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--fog);
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.polaroid-card::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 60px;
+  height: 25px;
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  display: block;
+}
+
+.scrap-tape {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.font-heading-scrap {
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.font-body-scrap {
+  font-family: var(--font-space), monospace;
+}
+
+/* Brush stroke overlay for text */
+.brush-highlight {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.brush-highlight::before {
+  content: "";
+  position: absolute;
+  top: 60%;
+  left: -5%;
+  width: 110%;
+  height: 40%;
+  background: var(--crimson);
+  z-index: -1;
+  transform: rotate(-2deg);
+  border-radius: 4px;
+}
+
+/* ================================
+   BRUSH-STROKE TAB NAVIGATION
+   ================================ */
+
+.brush-tab {
+  position: relative;
+  background: transparent;
+  transition: all 0.25s ease;
+}
+
+.brush-tab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  clip-path: polygon(4% 0%, 96% 2%, 100% 45%, 97% 100%, 3% 98%, 0% 50%);
+  background: var(--crimson);
+  transform: scaleX(0.8);
+  border-radius: 2px;
+}
+
+.brush-tab:hover::before {
+  opacity: 0.15;
+  transform: scaleX(1);
+}
+
+.brush-tab.active::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.brush-tab.active {
+  color: var(--parchment);
+}
+
+/* ================================
+   TORN EDGE CLIP PATH
+   ================================ */
+
+.torn-edge {
+  clip-path: polygon(0% 3%, 5% 0%, 12% 4%, 18% 1%, 25% 3%, 32% 0%, 38% 2%, 45% 0%,
+      52% 3%, 58% 1%, 65% 4%, 72% 0%, 78% 3%, 85% 1%, 92% 4%, 100% 2%,
+      100% 96%, 95% 100%, 88% 97%, 82% 100%, 75% 97%, 68% 100%, 62% 98%,
+      55% 100%, 48% 97%, 42% 100%, 35% 97%, 28% 100%, 22% 97%, 15% 100%,
+      8% 98%, 2% 100%, 0% 97%);
+}
+
+/* ================================
+   INK-FILL MASTERY BAR
+   ================================ */
+
+.ink-fill-bar {
+  height: 6px;
+  background: var(--fog);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+}
+
+.ink-fill-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: var(--fill, 0%);
+  background: linear-gradient(90deg, var(--crimson) 0%, var(--gold-muted) 100%);
+  border-radius: 1px;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ================================
+   WAX SEAL
+   ================================ */
+
+.wax-seal {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--crimson-light), var(--crimson-dark));
+  border: 3px solid var(--ink-black);
+  box-shadow:
+    inset 0 2px 6px rgba(255, 255, 255, 0.2),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-12deg);
+  position: relative;
+}
+
+.wax-seal::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+/* ================================
+   MICRO-ANIMATIONS
+   ================================ */
+
+@keyframes tab-wiggle {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-2deg);
+  }
+
+  75% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes ink-pulse {
+
+  0%,
+  100% {
+    text-shadow: 0 0 4px rgba(196, 163, 90, 0.3);
+  }
+
+  50% {
+    text-shadow: 0 0 12px rgba(196, 163, 90, 0.7);
+  }
+}
+
+.kanji-glow {
+  animation: ink-pulse 2.5s ease-in-out infinite;
+}
+
+.tab-hover-wiggle:hover {
+  animation: tab-wiggle 0.4s ease-in-out;
+}
+
+/* ================================
+   PARCHMENT NAV BAR
+   ================================ */
+
+.nav-parchment {
+  background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-muted) 100%);
+  border-bottom: 3px solid var(--ink-black);
+  position: relative;
+}
+
+.nav-parchment::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: repeat-x url("data:image/svg+xml,%3Csvg width='20' height='8' viewBox='0 0 20 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L5 8 L10 0 L15 8 L20 0' stroke='%230D0D0D' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+  opacity: 0.3;
+}
+
+/* ================================
+   CERTIFICATE RIBBON
+   ================================ */
+
+.cert-ribbon {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  z-index: 20;
+}
+
+.cert-ribbon::before {
+  content: "★";
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  padding: 4px 0;
+  background: var(--gold-muted);
+  color: var(--ink-black);
+  font-family: var(--font-archivo), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  transform: rotate(45deg);
+  top: 18px;
+  right: -28px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }

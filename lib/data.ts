@@ -12,23 +12,61 @@ export interface Project {
 
 export const personalInfo = {
     name: "Manas Sharma",
-    title: "Data Science & AI Engineer",
-    tagline: "Internship Student specializing in Data Science",
+    title: "AI & Machine Learning Researcher",
+    tagline: "B.Tech Data Science Undergraduate — Explainable Reinforcement Learning for Intelligent Systems",
     email: "ms9580@srmist.edu.in",
     phone: "+91 6265586868",
     github: "https://github.com/Manas8114",
     linkedin: "https://linkedin.com/in/manas8114",
     location: "India",
+    ielts: "Overall 6.5 (All Bands 6.5)",
     education: {
-        degree: "B.Tech",
+        degree: "B.Tech in Data Science",
         institution: "SRM Institute of Science & Technology",
         startYear: "2022",
+        graduationYear: "May 2026",
+        cgpa: "8.33 / 10",
         location: "India",
     },
+    researchInterests: [
+        "Reinforcement Learning",
+        "Explainable AI (XAI)",
+        "Machine Learning Systems",
+        "Intelligent Network Optimization",
+        "AI-Native Communication Systems",
+    ],
+    publications: [
+        {
+            title: "Reevaluating CNN Filter Dimensions: Experimental Findings on CIFAR-10 and Fashion-MNIST",
+            venue: "ICICV 2026",
+            status: "Accepted for Oral Presentation",
+        },
+        {
+            title: "Intent-Driven AI-Native Network Slicing for Rural Broadcasting over ATSC 3.0/B2X",
+            venue: "WOCC 2026",
+            status: "Under Review (EDAS)",
+        },
+    ],
+    researchExperience: [
+        {
+            title: "AI-Native Network Optimization Research",
+            points: [
+                "Designed RL-based framework for adaptive resource allocation in communication networks",
+                "Investigated optimization strategies for bandwidth prioritization using intent-driven automation",
+            ],
+        },
+        {
+            title: "Explainable Machine Learning Systems",
+            points: [
+                "Developed interpretable ML models using SHAP-based feature attribution techniques",
+                "Studied transparency and trust mechanisms in AI-driven decision-making pipelines",
+            ],
+        },
+    ],
     languages: [
         { name: "Hindi", level: "Native" },
-        { name: "English", level: "Proficient" },
-        { name: "German", level: "Advanced" },
+        { name: "English", level: "Professional" },
+        { name: "German", level: "Beginner" },
     ],
     interests: ["Cycling", "Badminton", "Gaming"],
 };
@@ -214,37 +252,40 @@ export const projects: Project[] = [
 export const skills = {
     languages: [
         { name: "Python", level: 95 },
-        { name: "JavaScript", level: 88 },
         { name: "SQL", level: 85 },
-        { name: "Java", level: 80 },
-        { name: "CSS", level: 85 },
-        { name: "TypeScript", level: 82 },
+        { name: "JavaScript", level: 80 },
+        { name: "TypeScript", level: 78 },
     ],
     aiml: [
-        { name: "Machine Learning", level: 90 },
-        { name: "Data Analysis", level: 92 },
-        { name: "Visualization", level: 88 },
-        { name: "Bayesian Methods", level: 82 },
-        { name: "NLP/Transformers", level: 80 },
-        { name: "Computer Vision", level: 78 },
+        { name: "Machine Learning", level: 92 },
+        { name: "Deep Learning", level: 85 },
+        { name: "Reinforcement Learning", level: 82 },
+        { name: "Computer Vision", level: 80 },
+        { name: "NLP", level: 80 },
+        { name: "XAI / SHAP", level: 85 },
+        { name: "Scikit-learn", level: 90 },
+        { name: "XGBoost", level: 88 },
+    ],
+    datascience: [
+        { name: "Pandas", level: 92 },
+        { name: "NumPy", level: 90 },
+        { name: "Statistical Analysis", level: 88 },
+        { name: "Data Visualization", level: 88 },
+        { name: "Ensemble Learning", level: 85 },
     ],
     backend: [
         { name: "FastAPI", level: 88 },
-        { name: "Node.js", level: 82 },
-        { name: "PostgreSQL", level: 80 },
-        { name: "Docker", level: 78 },
         { name: "REST APIs", level: 90 },
-    ],
-    frontend: [
-        { name: "React", level: 85 },
-        { name: "Next.js", level: 82 },
-        { name: "Tailwind CSS", level: 88 },
+        { name: "MongoDB", level: 78 },
+        { name: "Docker", level: 78 },
+        { name: "Model Deployment", level: 80 },
     ],
     tools: [
-        { name: "GitHub", level: 92 },
+        { name: "Git", level: 92 },
         { name: "Docker", level: 78 },
-        { name: "CI/CD", level: 75 },
-        { name: "Statistical Software", level: 85 },
+        { name: "Linux", level: 75 },
+        { name: "Next.js", level: 80 },
+        { name: "React", level: 78 },
     ],
 };
 
@@ -278,7 +319,7 @@ export const achievements = [
     },
     {
         id: "itu-buildathon-4",
-        title: "ITU FG-AINN Build-a-thon 4.0 Participation",
+        title: "1st Prize - Build-a-thon 4.0, ITU",
         type: "competition",
         description:
             "Developed intent-driven AI-native network slicing for rural ATSC 3.0 broadcasting.",

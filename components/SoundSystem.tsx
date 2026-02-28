@@ -103,8 +103,9 @@ export function SoundToggle() {
 
     return (
         <button
+            suppressHydrationWarning
             onClick={toggleSound}
-            className="fixed bottom-6 right-6 z-50 p-3 rounded-full transition-all duration-300 hover:scale-110"
+            className="fixed bottom-6 right-6 z-50 p-3 rounded-full transition-[transform,background-color,border-color,color] duration-300 hover:scale-110"
             style={{
                 background: soundEnabled ? "var(--crimson)" : "var(--charcoal)",
                 border: "1px solid var(--fog)",
@@ -115,6 +116,7 @@ export function SoundToggle() {
         >
             {soundEnabled ? (
                 <svg
+                    suppressHydrationWarning
                     className="w-5 h-5"
                     fill="none"
                     stroke="currentColor"
@@ -129,6 +131,7 @@ export function SoundToggle() {
                 </svg>
             ) : (
                 <svg
+                    suppressHydrationWarning
                     className="w-5 h-5"
                     fill="none"
                     stroke="currentColor"

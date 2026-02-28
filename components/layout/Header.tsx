@@ -26,7 +26,7 @@ export default function Header() {
 
     return (
         <motion.header
-            className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+            className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300"
             style={{
                 background: isScrolled
                     ? "rgba(13, 13, 13, 0.95)"
@@ -86,6 +86,6 @@ export default function Header() {
                     </button>
                 </nav>
             </motion.div>
-        </motion.header>
+        </motion.header >
     );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TabNav, TabId, tabs, pageTransitionVariants, getTabDirection } from "@/components/TabNav";
 import { SoundProvider, SoundToggle } from "@/components/SoundSystem";
@@ -43,25 +43,23 @@ export default function Home() {
   );
 
   // Handle browser back/forward
-  useMemo(() => {
-    if (typeof window !== "undefined") {
-      const handleHashChange = () => {
-        const hash = window.location.hash.slice(1) as TabId;
-        if (tabs.some((t) => t.id === hash)) {
-          setActiveTab(hash);
-        }
-      };
-
-      window.addEventListener("hashchange", handleHashChange);
-
-      // Check initial hash
-      const initialHash = window.location.hash.slice(1) as TabId;
-      if (tabs.some((t) => t.id === initialHash)) {
-        setActiveTab(initialHash);
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.slice(1) as TabId;
+      if (tabs.some((t) => t.id === hash)) {
+        setActiveTab(hash);
       }
+    };
 
-      return () => window.removeEventListener("hashchange", handleHashChange);
+    window.addEventListener("hashchange", handleHashChange);
+
+    // Check initial hash
+    const initialHash = window.location.hash.slice(1) as TabId;
+    if (initialHash && tabs.some((t) => t.id === initialHash)) {
+      setActiveTab(initialHash);
     }
+
+    return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
   const ActiveComponent = tabComponents[activeTab];

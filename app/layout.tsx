@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Noto_Serif_JP, Inter } from "next/font/google";
+import { Noto_Serif_JP, Inter, Space_Grotesk, Archivo } from "next/font/google";
 import "./globals.css";
+import Cursor from "@/components/Cursor";
 
 const notoSerifJP = Noto_Serif_JP({
   variable: "--font-noto-serif",
@@ -11,6 +12,20 @@ const notoSerifJP = Noto_Serif_JP({
 
 const inter = Inter({
   variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
@@ -43,10 +58,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth relative overflow-x-hidden" suppressHydrationWarning>
       <body
-        className={`${notoSerifJP.variable} ${inter.variable} antialiased`}
+        suppressHydrationWarning
+        className={`${notoSerifJP.variable} ${inter.variable} ${spaceGrotesk.variable} ${archivo.variable} antialiased paper-texture`}
       >
+        <Cursor />
         {children}
       </body>
     </html>
