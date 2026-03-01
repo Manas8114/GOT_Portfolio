@@ -8,16 +8,18 @@ interface SoundContextType {
     playSound: (soundType: SoundType) => void;
 }
 
-type SoundType = "transition" | "hover" | "click" | "ambient";
+type SoundType = "transition" | "hover" | "click" | "ambient" | "drag" | "drop";
 
 const SoundContext = createContext<SoundContextType | null>(null);
 
-// Sound URLs (using royalty-free sounds)
+// Sound URLs — drag/drop reuse existing assets at different volumes for distinct feedback
 const sounds: Record<SoundType, string> = {
-    transition: "/sounds/wind-soft.mp3",
-    hover: "/sounds/bamboo-tap.mp3",
-    click: "/sounds/wood-tap.mp3",
-    ambient: "/sounds/wind-ambient.mp3",
+    transition: "/sounds/wind-soft.wav",
+    hover: "/sounds/bamboo-tap.wav",
+    click: "/sounds/wood-tap.wav",
+    ambient: "/sounds/wind-ambient.wav",
+    drag: "/sounds/bamboo-tap.wav",
+    drop: "/sounds/wood-tap.wav",
 };
 
 export function SoundProvider({ children }: { children: ReactNode }) {
@@ -49,7 +51,7 @@ export function SoundProvider({ children }: { children: ReactNode }) {
             Object.entries(sounds).forEach(([key, url]) => {
                 const audio = new Audio(url);
                 audio.preload = "auto";
-                audio.volume = key === "ambient" ? 0.1 : 0.3;
+                audio.volume = key === "ambient" ? 0.1 : key === "drag" ? 0.15 : key === "drop" ? 0.4 : 0.3;
                 cache[key] = audio;
             });
             setAudioCache(cache);
@@ -68,10 +70,13 @@ export function SoundProvider({ children }: { children: ReactNode }) {
     const playSound = (soundType: SoundType) => {
         if (!soundEnabled || prefersReducedMotion) return;
 
-        const audio = audioCache[soundType];
-        if (audio) {
-            audio.currentTime = 0;
-            audio.play().catch(() => {
+        const audioNode = audioCache[soundType];
+        if (audioNode) {
+            // HTMLAudioElement API natively allows currentTime mutation. To satisfy strict ESLint rules
+            // that mistake this block-scoped reference for a React state mutation, clone the node.
+            const clonedAudio = audioNode.cloneNode(true) as HTMLAudioElement;
+            clonedAudio.volume = audioNode.volume;
+            clonedAudio.play().catch(() => {
                 // Autoplay blocked, silent fail
             });
         }

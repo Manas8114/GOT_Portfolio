@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { personalInfo } from "@/lib/data";
 import { FadeInView } from "@/components/animations/AnimationUtils";
+import bgImage from "@/public/images/call-shrine.png";
 
 export default function Contact() {
     const socialLinks = [
@@ -70,11 +71,12 @@ export default function Contact() {
             {/* Background Image */}
             <div className="absolute inset-0 z-0 opacity-30">
                 <Image
-                    src="/images/call-shrine.png"
+                    src={bgImage}
                     alt="Japanese shrine at dusk"
                     fill
                     className="object-cover"
                     quality={80}
+                    placeholder="blur"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-black via-ink-black/80 to-transparent" />
             </div>

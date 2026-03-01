@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { personalInfo, strengths } from "@/lib/data";
 import { Sparkles, Puzzle, BarChart3 } from "lucide-react";
 import { useSound } from "@/components/SoundSystem";
-import { useRef } from "react";
+import { useState, useEffect } from "react";
 
 const StrengthIcon = ({ title, className }: { title: string, className?: string }) => {
     switch (title) {
@@ -16,19 +16,22 @@ const StrengthIcon = ({ title, className }: { title: string, className?: string 
 };
 
 export default function About() {
-    const containerRef = useRef<HTMLElement>(null);
     const { playSound } = useSound();
+    const [isMobile, setIsMobile] = useState(false);
 
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start end", "end start"]
-    });
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    const { scrollYProgress } = useScroll();
 
     const bgY = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
     return (
         <section
             id="warrior"
-            ref={containerRef}
             className="relative min-h-[160vh] w-full overflow-hidden pt-24 pb-32"
             style={{ background: "transparent" }}
         >
@@ -158,32 +161,39 @@ export default function About() {
                         </svg>
                     </div>
 
-                    <p className="font-heading-scrap text-6xl md:text-8xl text-ink-black absolute top-0 left-0 md:left-20 md:top-20 z-0 opacity-10">THE ARSENAL</p>
+                    <p className="font-heading-scrap text-6xl md:text-8xl text-ink-black absolute top-0 left-0 md:left-20 md:top-20 z-0 opacity-10">THE WARRIOR</p>
 
-                    {strengths.map((strength, index) => {
+                    {strengths.slice(0, 3).map((strength, index) => {
                         const positions = [
-                            { top: "10%", left: "10%", rotate: "-8deg" },
-                            { top: "35%", left: "45%", rotate: "12deg" },
-                            { top: "60%", left: "20%", rotate: "-15deg" },
+                            { top: "10%", left: "5%", mdTop: "5%", mdLeft: "10%" },
+                            { top: "15%", left: "10%", mdTop: "-60%", mdLeft: "40%" },
+                            { top: "20%", left: "5%", mdTop: "42%", mdLeft: "30%" },
                         ];
                         const pos = positions[index] || positions[0];
+                        const rotate = ["-6deg", "8deg", "-4deg"][index] || "-2deg";
 
                         return (
                             <motion.div
                                 key={strength.title}
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" || e.key === " ") {
+                                        playSound("click");
+                                    }
+                                }}
                                 drag
                                 onDragStart={() => playSound("click")}
-                                whileDrag={{ scale: 1.15, rotate: (parseInt(pos.rotate) || 0) + 10, cursor: "grabbing", zIndex: 100 }}
+                                whileDrag={{ scale: 1.15, rotate: (parseInt(rotate) || 0) + 10, cursor: "grabbing", zIndex: 100 }}
                                 dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
                                 initial={{ opacity: 0, scale: 0.5, y: 100 }}
                                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ type: "spring", delay: index * 0.2 }}
-                                className="polaroid-card w-64 md:w-72 absolute md:block relative m-4 md:m-0 cursor-grab z-10 hover:z-50"
+                                className={`polaroid-card w-64 md:w-72 absolute m-4 md:m-0 cursor-grab z-10 hover:z-50`}
                                 style={{
-                                    top: pos.top,
-                                    left: pos.left,
-                                    rotate: pos.rotate,
+                                    top: isMobile ? pos.top : pos.mdTop,
+                                    left: isMobile ? pos.left : pos.mdLeft,
+                                    rotate: rotate,
                                 }}
                             >
                                 <div className="bg-charcoal w-full h-40 mb-4 flex items-center justify-center border-2 border-ink-black overflow-hidden relative">

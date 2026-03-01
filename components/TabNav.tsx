@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useCallback, memo } from "react";
+import { useCallback, memo } from "react";
 
 export type TabId = "path" | "warrior" | "arsenal" | "battles" | "scrolls" | "seals" | "call";
 
@@ -38,13 +37,13 @@ const TabButton = memo(function TabButton({
     return (
         <button
             onClick={onClick}
+            aria-current={isActive ? "page" : undefined}
             className={`
-                relative px-3 md:px-5 py-3 text-xs md:text-sm tracking-wider
-                brush-tab tab-hover-wiggle
-                transition-colors duration-200 ease-out
+                relative px-3 md:px-4 py-2 text-xs md:text-sm tracking-wider
+                transition-all duration-200 ease-out rounded-sm
                 ${isActive
-                    ? "active text-parchment font-bold"
-                    : "text-charcoal hover:text-ink-black"
+                    ? "bg-crimson text-parchment font-bold shadow-[3px_3px_0px_#0D0D0D]"
+                    : "text-charcoal hover:text-ink-black hover:bg-charcoal/10"
                 }
             `}
             style={{ willChange: "transform" }}
@@ -53,9 +52,9 @@ const TabButton = memo(function TabButton({
             <span className="relative z-10 flex items-center gap-1.5 md:gap-2">
                 <span
                     className={`
-                        hidden md:inline text-base font-serif transition-colors transition-transform duration-300
+                        hidden md:inline text-base font-serif transition-all duration-300
                         ${isActive
-                            ? "text-gold-muted kanji-glow scale-110"
+                            ? "text-gold-muted scale-125 drop-shadow-[0_0_6px_rgba(210,175,98,0.8)]"
                             : "text-stone-gray"
                         }
                     `}
@@ -66,23 +65,6 @@ const TabButton = memo(function TabButton({
                     {tab.label}
                 </span>
             </span>
-
-            {/* Active ink-stroke underline */}
-            <span
-                className={`
-                    absolute bottom-1 left-1/2 -translate-x-1/2 h-[3px] rounded-sm
-                    transition-[width,opacity,background-color] duration-300 ease-out
-                    ${isActive
-                        ? "w-3/5 opacity-100 bg-gold-muted"
-                        : "w-0 opacity-0 bg-crimson"
-                    }
-                `}
-                style={{
-                    clipPath: isActive
-                        ? "polygon(0% 0%, 100% 20%, 98% 100%, 2% 80%)"
-                        : "none",
-                }}
-            />
         </button>
     );
 });

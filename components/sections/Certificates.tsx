@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { certificates } from "@/lib/data";
 import { useState, useEffect, useRef } from "react";
 import { useSound } from "@/components/SoundSystem";
@@ -9,17 +9,26 @@ import { useSound } from "@/components/SoundSystem";
 const certLayout = [
     { top: "0%", left: "3%", rotate: "-5deg" },
     { top: "2%", left: "52%", rotate: "4deg" },
-    { top: "22%", left: "8%", rotate: "3deg" },
-    { top: "24%", left: "56%", rotate: "-7deg" },
-    { top: "44%", left: "2%", rotate: "5deg" },
-    { top: "46%", left: "54%", rotate: "-3deg" },
-    { top: "66%", left: "6%", rotate: "-4deg" },
-    { top: "68%", left: "52%", rotate: "6deg" },
-    { top: "88%", left: "3%", rotate: "2deg" },
+    { top: "18%", left: "8%", rotate: "3deg" },
+    { top: "20%", left: "56%", rotate: "-7deg" },
+    { top: "36%", left: "2%", rotate: "5deg" },
+    { top: "38%", left: "54%", rotate: "-3deg" },
+    { top: "54%", left: "6%", rotate: "-4deg" },
+    { top: "56%", left: "52%", rotate: "6deg" },
+    { top: "72%", left: "3%", rotate: "2deg" },
+    { top: "74%", left: "55%", rotate: "-4deg" },
+    { top: "90%", left: "5%", rotate: "3deg" },
+    { top: "92%", left: "53%", rotate: "-2deg" },
+    { top: "108%", left: "2%", rotate: "5deg" },
+    { top: "110%", left: "57%", rotate: "-6deg" },
+    { top: "126%", left: "4%", rotate: "2deg" },
 ];
 
-// Featured certificates get a gold ribbon
-const featuredCerts = ["oracle-ai", "java-nptel"];
+// Define the primary certificates that deserve larger scale/focus
+const featuredCerts = [
+    "oracle-ai-foundations",
+    "nptel-java"
+];
 
 interface CertCardProps {
     cert: (typeof certificates)[0];
@@ -30,6 +39,7 @@ interface CertCardProps {
 
 function CertCard({ cert, index, layout, isMobile }: CertCardProps) {
     const hasFeaturedRibbon = featuredCerts.includes(cert.id);
+    const isFeatured = featuredCerts.includes(cert.id);
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-40px" });
     const { playSound } = useSound();
@@ -38,18 +48,27 @@ function CertCard({ cert, index, layout, isMobile }: CertCardProps) {
         <motion.div
             ref={ref}
             drag
-            onDragStart={() => playSound("hover")}
+            onDragStart={() => playSound("drag")}
+            onDragEnd={() => playSound("drop")}
             dragConstraints={{ left: -200, right: 200, top: -150, bottom: 300 }}
-            whileDrag={{ scale: 1.08, rotate: -2, cursor: "grabbing", zIndex: 100 }}
+            whileDrag={{
+                scale: 1.08,
+                rotate: -2,
+                cursor: "grabbing",
+                zIndex: 100,
+                boxShadow: "14px 20px 40px rgba(13,13,13,0.3), 0 0 0 2px var(--crimson)",
+            }}
             initial={{ opacity: 0, scale: 0.8, y: 40 }}
             animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
-            transition={{ type: "spring", delay: index * 0.08, stiffness: 200, damping: 20 }}
+            transition={{ type: "spring", delay: index * 0.1 }}
             whileHover={{ y: -10, scale: 1.03, rotate: 0 }}
-            className={`w-[85vw] max-w-[340px] bg-parchment p-5 pt-7 border-3 border-charcoal relative cursor-grab z-10 hover:z-50 ${isMobile ? "mb-6" : "absolute"} shadow-[6px_6px_0px_#0D0D0D] group torn-edge overflow-visible`}
+            className={`group ${isFeatured ? "w-[90vw] md:w-[350px]" : "w-[80vw] md:w-[280px]"} mb-12 md:mb-0 bg-parchment p-5 pt-7 border-3 border-charcoal relative cursor-grab z-10 hover:z-50 ${isMobile ? "" : "absolute"} shadow-[6px_6px_0px_#0D0D0D] torn-edge overflow-visible transition-shadow duration-300`}
             style={{
                 top: isMobile ? "auto" : layout.top,
                 left: isMobile ? "auto" : layout.left,
                 rotate: isMobile ? "0deg" : layout.rotate,
+                transformOrigin: "top center",
+                willChange: "transform"
             }}
         >
             {/* Tape decoration */}
@@ -64,12 +83,12 @@ function CertCard({ cert, index, layout, isMobile }: CertCardProps) {
             </div>
 
             {/* Title */}
-            <h3 className="font-heading-scrap text-base md:text-lg text-ink-black mb-1.5 leading-tight uppercase text-center">
+            <h3 className={`font-heading-scrap ${isFeatured ? 'text-2xl md:text-3xl' : 'text-base md:text-lg'} text-ink-black mb-1.5 leading-tight uppercase text-center`}>
                 {cert.title}
             </h3>
 
             {/* Issuer */}
-            <p className="font-body-scrap text-[10px] font-black text-crimson mb-2 uppercase tracking-widest text-center">
+            <p className={`font-body-scrap ${isFeatured ? 'text-xs' : 'text-[10px]'} font-black text-crimson mb-2 uppercase tracking-widest text-center`}>
                 {cert.issuer}
             </p>
 
@@ -118,68 +137,72 @@ function CertCard({ cert, index, layout, isMobile }: CertCardProps) {
 export default function Certificates() {
     const [mounted, setMounted] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-    const containerRef = useRef<HTMLElement>(null);
+    const [resetKey, setResetKey] = useState(0);
     const { playSound } = useSound();
 
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start end", "end start"]
-    });
-
-    const bgY = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
+    const handleReorganize = () => {
+        playSound('click');
+        setResetKey(prev => prev + 1);
+    };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
-        setIsMobile(window.innerWidth <= 768);
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+        checkMobile();
+
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
 
+    if (!mounted) return null;
+
     return (
-        <section
-            id="certificates"
-            ref={containerRef}
-            className="relative min-h-[180vh] w-full pt-10 pb-32 overflow-hidden"
-            style={{ background: "transparent" }}
-        >
-            <div className="container relative z-10 max-w-6xl mx-auto h-full px-4">
+        <section id="seals" className="min-h-screen py-20 px-4 md:px-8 max-w-7xl mx-auto relative overflow-hidden" suppressHydrationWarning>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[url('/grid.png')] opacity-10 pointer-events-none" />
 
-                {/* Background Kanji Watermark */}
+            {/* Tidy Desk Button */}
+            <div className="flex justify-between items-end mb-16 relative z-50">
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 0.05, scale: 1 }}
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    className="absolute top-[8%] left-[5%] z-0 select-none hidden md:block pointer-events-none"
-                    style={{ y: bgY }}
+                    className="relative inline-block"
                 >
-                    <h2 className="kanji text-[14rem] md:text-[18rem] leading-none text-crimson">
-                        印
+                    <div className="absolute -inset-4 bg-crimson/10 rotate-2 blur-lg" />
+                    <h2 className="text-4xl md:text-6xl font-heading-scrap text-charcoal tracking-tighter uppercase relative">
+                        Official Seals
+                        <span className="block text-xl md:text-2xl text-crimson font-body-scrap tracking-widest mt-2">Certified Output</span>
                     </h2>
+                    <motion.div
+                        className="h-2 w-full bg-crimson mt-2 origin-left"
+                        initial={{ scaleX: 0 }}
+                        whileInView={{ scaleX: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3, duration: 0.8 }}
+                    />
                 </motion.div>
 
-                {/* Scattered ink dots */}
-                <div className="absolute top-[15%] right-[20%] w-3 h-3 bg-ink-black rounded-full opacity-25 pointer-events-none" />
-                <div className="absolute top-[25%] right-[40%] w-2 h-2 bg-crimson rounded-full opacity-15 pointer-events-none" />
-                <div className="absolute top-[60%] left-[18%] w-4 h-4 bg-ink-black rounded-full opacity-20 pointer-events-none" />
-                <div className="absolute bottom-[30%] right-[12%] w-2 h-2 bg-gold-muted rounded-full opacity-25 pointer-events-none" />
-
-                {/* Title element */}
-                <motion.div
-                    className="bg-charcoal p-6 md:p-8 max-w-md mx-auto md:mx-0 md:ml-auto md:mr-[10%] border-4 border-ink-black shadow-[8px_8px_0px_#0D0D0D] relative z-20 transform md:rotate-[3deg] mt-10 md:mt-20"
-                    drag
-                    onDragStart={() => playSound("click")}
-                    dragConstraints={{ left: -50, right: 50, top: -50, bottom: 50 }}
-                    whileDrag={{ scale: 1.05, rotate: 1, cursor: "grabbing" }}
+                <button
+                    onClick={handleReorganize}
+                    className="group flex flex-col items-center justify-center gap-1 cursor-pointer transition-transform hover:scale-105 active:scale-95"
                 >
-                    <div className="scrap-tape top-[-20px] left-[50%] -translate-x-1/2 w-24 h-10 rotate-[-5deg]" />
-                    <h2 className="font-heading-scrap text-4xl md:text-5xl text-gold-muted mb-2 uppercase">Seals of Mastery</h2>
-                    <p className="font-body-scrap text-sm text-parchment font-bold leading-relaxed">
-                        Formal recognition of knowledge acquired. Each seal represents a deliberate step toward mastery. Hover to reveal credentials. Drag to explore.
-                    </p>
-                </motion.div>
+                    <div className="w-12 h-12 bg-charcoal rounded-full flex items-center justify-center shadow-[4px_4px_0px_var(--crimson)] border-2 border-crimson text-parchment group-hover:bg-crimson group-hover:text-charcoal transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
+                    </div>
+                    <span className="font-heading-scrap text-sm uppercase text-charcoal font-bold tracking-widest">Tidy Desk</span>
+                </button>
+            </div>
+
+            <div className="relative mt-20" suppressHydrationWarning>
+                {/* Board edge texture */}
+                <div className="absolute -inset-x-4 -inset-y-8 bg-gradient-to-br from-parchment-light to-parchment-dark shadow-inner-lg border-t-2 border-b-2 border-charcoal/20 z-0" />
 
                 {/* Certificates Scattered Grid */}
-                <div className={`relative w-full mt-14 z-30 ${isMobile ? "flex flex-col items-center" : ""}`}
-                    style={{ height: isMobile ? "auto" : "1400px" }}
+                <div className={`relative w-full z-30 ${isMobile ? "flex flex-col items-center" : ""}`}
+                    style={{ height: isMobile ? "auto" : "2200px" }}
+                    key={resetKey} // Hooked to re-render all Framer drags back to zero
                 >
                     {certificates.map((cert, index) => (
                         <CertCard
@@ -191,11 +214,7 @@ export default function Certificates() {
                         />
                     ))}
                 </div>
-
             </div>
-
-            {/* Background texture overlay */}
-            <div className="absolute inset-0 bg-parchment-muted opacity-15 mix-blend-multiply pointer-events-none z-0" />
         </section>
     );
 }

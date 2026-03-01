@@ -7,6 +7,7 @@ export interface Project {
     technologies: string[];
     githubUrl: string;
     featured: boolean;
+    isResearch?: boolean;
     highlights: string[];
 }
 
@@ -72,6 +73,30 @@ export const personalInfo = {
 };
 
 export const projects: Project[] = [
+    {
+        id: "icicv-cnn",
+        title: "Reevaluating CNN Filter Dimensions",
+        description: "Experimental Findings on CIFAR-10 and Fashion-MNIST.",
+        longDescription: "Accepted for Oral Presentation at ICICV 2026. A detailed analysis of CNN filter dimension impact on benchmark datasets.",
+        category: "research",
+        technologies: ["Python", "Deep Learning", "CNN", "PyTorch"],
+        githubUrl: "https://github.com/Manas8114",
+        featured: true,
+        isResearch: true,
+        highlights: ["ICICV 2026 Oral Presentation", "CNN Filter Analysis", "CIFAR-10", "Fashion-MNIST"],
+    },
+    {
+        id: "wocc-network-slicing",
+        title: "Intent-Driven AI-Native Network Slicing",
+        description: "Network Slicing for Rural Broadcasting over ATSC 3.0/B2X.",
+        longDescription: "Under Review at WOCC 2026. Proposes intent-driven automation for network slicing optimization.",
+        category: "research",
+        technologies: ["Python", "Network Slicing", "AI-Native", "ATSC 3.0"],
+        githubUrl: "https://github.com/Manas8114",
+        featured: true,
+        isResearch: true,
+        highlights: ["WOCC 2026 Submission", "AI-Native Slicing", "Rural Broadcasting", "ATSC 3.0"],
+    },
     {
         id: "6g-network",
         title: "6G Network AI System",
@@ -247,6 +272,150 @@ export const projects: Project[] = [
             "Impact visualization",
         ],
     },
+    {
+        id: "trust-rl",
+        title: "TRUST-RL",
+        description:
+            "Trustworthy Reinforcement Learning framework with safety constraints and policy verification.",
+        longDescription:
+            "A research framework exploring trust and safety in reinforcement learning agents, implementing policy verification and constraint-satisfaction mechanisms.",
+        category: "research",
+        technologies: ["Python", "Reinforcement Learning", "PyTorch", "Safety AI"],
+        githubUrl: "https://github.com/Manas8114/TRUST-RL",
+        featured: true,
+        highlights: [
+            "Safe RL policy constraints",
+            "Trust-aware agent training",
+            "Policy verification mechanisms",
+            "Reward shaping with safety",
+        ],
+    },
+    {
+        id: "pii-web3",
+        title: "PII Detection with Web3",
+        description:
+            "Privacy-preserving PII detection system with Web3 blockchain integration and IPFS storage.",
+        longDescription:
+            "A full-stack application combining NLP-based PII detection with Web3 technologies, featuring an IPFS demo mode and blockchain-backed data integrity.",
+        category: "web",
+        technologies: ["HTML", "JavaScript", "Web3", "NLP", "IPFS"],
+        githubUrl: "https://github.com/Manas8114/Pii-web3",
+        featured: true,
+        highlights: [
+            "Custom PII pattern detection",
+            "IPFS decentralized storage",
+            "Web3 blockchain integration",
+            "Privacy-first architecture",
+        ],
+    },
+    {
+        id: "etl-pipeline",
+        title: "Multi-Agent ETL Pipeline",
+        description:
+            "ETL pipeline automation system powered by multi-agent architecture for intelligent data processing.",
+        longDescription:
+            "An automated ETL system that uses multiple AI agents to orchestrate extract, transform, and load operations across heterogeneous data sources.",
+        category: "systems",
+        technologies: ["Python", "Multi-Agent", "Data Engineering", "Automation"],
+        githubUrl: "https://github.com/Manas8114/ETL-Pipeline-Automation-System-with-Multi-Agent-Architecture",
+        featured: true,
+        highlights: [
+            "Multi-agent orchestration",
+            "Automated data pipelines",
+            "Heterogeneous source support",
+            "Intelligent data transformation",
+        ],
+    },
+    {
+        id: "ewaste-ai",
+        title: "E-Waste AI Classification",
+        description:
+            "AI-powered electronic waste classification and recycling recommendation system.",
+        longDescription:
+            "A machine learning system that classifies electronic waste categories and provides recycling recommendations to reduce environmental impact.",
+        category: "ai-ml",
+        technologies: ["Python", "Computer Vision", "Classification", "Sustainability"],
+        githubUrl: "https://github.com/Manas8114/ewaste-ai-system",
+        featured: false,
+        highlights: [
+            "E-waste image classification",
+            "Recycling recommendations",
+            "Environmental impact assessment",
+            "Multi-category detection",
+        ],
+    },
+    {
+        id: "dll-engine",
+        title: "Deep Learning Library Engine",
+        description:
+            "Custom deep learning library engine for model building, training, and fine-tuning.",
+        longDescription:
+            "A from-scratch deep learning library engine implementing core neural network operations, backpropagation, and model management utilities.",
+        category: "ai-ml",
+        technologies: ["Python", "Deep Learning", "NumPy", "Neural Networks"],
+        githubUrl: "https://github.com/Manas8114/DLL_Engine",
+        featured: false,
+        highlights: [
+            "Custom neural network layers",
+            "Backpropagation engine",
+            "Model training pipeline",
+            "Fine-tuning utilities",
+        ],
+    },
+    {
+        id: "xai-loan",
+        title: "Explainable AI Loan System",
+        description:
+            "XAI-powered loan approval system with SHAP explainability and transparent decision-making.",
+        longDescription:
+            "A machine learning loan approval system that provides fully explainable predictions using SHAP values and feature importance analysis.",
+        category: "ai-ml",
+        technologies: ["Python", "XAI", "SHAP", "Scikit-learn", "Streamlit"],
+        githubUrl: "https://github.com/Manas8114/XAI_loan_system",
+        featured: false,
+        highlights: [
+            "SHAP explainability",
+            "Transparent lending decisions",
+            "Feature importance analysis",
+            "Bias detection and mitigation",
+        ],
+    },
+    {
+        id: "byte2beat",
+        title: "Byte2Beat",
+        description:
+            "Audio generation and music synthesis system using byte-level processing and signal analysis.",
+        longDescription:
+            "A creative AI project that converts byte-level data into audio patterns, exploring the intersection of data science and music generation.",
+        category: "ai-ml",
+        technologies: ["Python", "Audio Processing", "Signal Analysis", "DSP"],
+        githubUrl: "https://github.com/Manas8114/byte2beat",
+        featured: false,
+        highlights: [
+            "Byte-to-audio conversion",
+            "Signal processing pipeline",
+            "Creative music synthesis",
+            "Pattern-based generation",
+        ],
+    },
+    {
+        id: "smartmedi-box",
+        title: "Smart Medicine Box",
+        description:
+            "IoT-enabled smart medicine box with reminder scheduling, dosage tracking, and health monitoring.",
+        longDescription:
+            "A healthcare IoT solution that combines embedded systems with a web dashboard for medication management and patient compliance tracking.",
+        category: "systems",
+        technologies: ["HTML", "IoT", "Embedded Systems", "Healthcare"],
+        githubUrl: "https://github.com/Manas8114/Smartmedi-box",
+        featured: false,
+        highlights: [
+            "IoT medication reminders",
+            "Dosage compliance tracking",
+            "Web-based health dashboard",
+            "Patient monitoring integration",
+        ],
+    },
 ];
 
 export const skills = {
@@ -326,9 +495,45 @@ export const achievements = [
         year: "2026",
         highlight: true,
     },
+    {
+        id: "icicv-publication",
+        title: "Publication — ICICV 2026",
+        type: "research",
+        description:
+            "\"Reevaluating CNN Filter Dimensions: Experimental Findings on CIFAR-10 and Fashion-MNIST\" accepted for Oral Presentation at IEEE ICICV 2026.",
+        year: "2026",
+        highlight: true,
+    },
+    {
+        id: "wocc-publication",
+        title: "Publication — WOCC 2026",
+        type: "research",
+        description:
+            "\"Intent-Driven AI-Native Network Slicing for Rural Broadcasting over ATSC 3.0/B2X\" submitted for review at IEEE WOCC 2026.",
+        year: "2026",
+        highlight: true,
+    },
 ];
 
 export const certificates = [
+    {
+        id: "ibm-python-ds",
+        title: "Python for Data Science, AI & Development",
+        issuer: "IBM via Coursera",
+        context: "Data Science and AI foundations using Python. Data handling and model basics.",
+    },
+    {
+        id: "ng-ml-specialization",
+        title: "Machine Learning Specialization",
+        issuer: "Stanford / DeepLearning.AI (Andrew Ng)",
+        context: "Fundamental and applied Machine Learning concepts including supervised and unsupervised learning.",
+    },
+    {
+        id: "data-engineering",
+        title: "Data Engineering Foundations",
+        issuer: "IBM via Coursera",
+        context: "Fundamentals of data engineering, data lifecycle, and big data ecosystems.",
+    },
     {
         id: "oracle-ai",
         title: "Oracle Cloud Infrastructure 2025 Certified AI Foundations Associate",
@@ -376,6 +581,12 @@ export const certificates = [
         context: "Comprehensive Java programming covering OOP, data structures, and algorithms.",
     },
     {
+        id: "nptel-elite-top5",
+        title: "Elite Certification (Top 5%)",
+        issuer: "NPTEL",
+        context: "Awarded for exceptional performance among the top 5% candidates in specific NPTEL courses.",
+    },
+    {
         id: "networking-nptel",
         title: "Demystifying Networking",
         issuer: "NPTEL",
@@ -402,9 +613,24 @@ export const certificates = [
 
 export const strengths = [
     {
-        title: "Creativity and Adaptability",
-        description: "Demonstrates creativity and adaptability in problem-solving",
-        icon: "✨",
+        title: "Creative",
+        description: "Approaches problems with original thinking and unconventional solutions",
+        icon: "🎨",
+    },
+    {
+        title: "Relentless",
+        description: "Driven by curiosity, pushing until the puzzle clicks and the system works.",
+        icon: "🔥",
+    },
+    {
+        title: "Strategic",
+        description: "Systems thinker mapping the big picture before diving into the code.",
+        icon: "♟️",
+    },
+    {
+        title: "Adaptive",
+        description: "Quickly adapts to new technologies, frameworks, and evolving requirements",
+        icon: "🔄",
     },
     {
         title: "Problem-Solving",
@@ -412,8 +638,18 @@ export const strengths = [
         icon: "🧩",
     },
     {
-        title: "Data Analysis and Visualization",
+        title: "Data Analysis",
         description: "Highly skilled in data analysis and visualization techniques",
         icon: "📊",
+    },
+    {
+        title: "Research-Driven",
+        description: "Published IEEE researcher with a systematic, evidence-based approach",
+        icon: "📚",
+    },
+    {
+        title: "Visionary",
+        description: "Forward-looking, building solutions designed to scale for the long term.",
+        icon: "👁️",
     },
 ];

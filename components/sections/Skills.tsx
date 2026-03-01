@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import { skills } from "@/lib/data";
+import { skills, strengths } from "@/lib/data";
 import { useState, useEffect, useRef } from "react";
 import { useSound } from "@/components/SoundSystem";
 
@@ -12,6 +12,7 @@ const categoryLayout = [
     { top: "38%", left: "15%", rotate: "7deg" },
     { top: "42%", left: "60%", rotate: "-9deg" },
     { top: "72%", left: "25%", rotate: "3deg" },
+    { top: "75%", left: "65%", rotate: "5deg" },
 ];
 
 // Individual chip rotations per index
@@ -124,19 +125,18 @@ import { Code2, BrainCircuit, BarChart3, Database, Wrench } from "lucide-react";
 export default function Skills() {
     const [isMobile, setIsMobile] = useState(false);
     const [mounted, setMounted] = useState(false);
-    const containerRef = useRef<HTMLElement>(null);
     const { playSound } = useSound();
 
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start end", "end start"]
-    });
+    const { scrollYProgress } = useScroll();
 
     const bgY = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
 
     useEffect(() => {
-        setMounted(true);
-        setIsMobile(window.innerWidth <= 768);
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+        checkMobile();
+
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
 
@@ -146,13 +146,17 @@ export default function Skills() {
         { title: "Data Science", icon: <BarChart3 className="w-8 h-8 text-charcoal" />, items: skills.datascience },
         { title: "Backend", icon: <Database className="w-8 h-8 text-charcoal" />, items: skills.backend },
         { title: "Tools", icon: <Wrench className="w-8 h-8 text-charcoal" />, items: skills.tools },
+        {
+            title: "Personal Strengths",
+            icon: <BrainCircuit className="w-8 h-8 text-charcoal" />,
+            items: strengths.map((s) => ({ name: s.title, level: 100 }))
+        },
     ];
 
     return (
         <section
             id="skills"
-            ref={containerRef}
-            className="relative min-h-[150vh] w-full pt-20 pb-40 overflow-hidden"
+            className="relative min-h-[250vh] md:min-h-[170vh] w-full pt-20 pb-40 overflow-hidden"
             style={{ background: "transparent" }}
         >
             <div className="container relative z-10 max-w-6xl mx-auto h-full px-4">
@@ -177,6 +181,12 @@ export default function Skills() {
                 {/* Section Title */}
                 <div className="mb-20 md:mb-0 relative z-20 md:w-1/2 pt-10">
                     <motion.div
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                                playSound("click");
+                            }
+                        }}
                         drag
                         onDragStart={() => playSound("hover")}
                         dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
@@ -205,6 +215,36 @@ export default function Skills() {
                         />
                     ))}
                 </div>
+
+                {/* The Creative Catalyst Banner in the empty bottom area */}
+                <motion.div
+                    className="absolute top-[200vh] md:top-[120vh] left-1/2 -translate-x-1/2 z-40 w-[90%] max-w-2xl bg-charcoal p-8 border-4 border-ink-black shadow-[8px_8px_0px_var(--crimson)]"
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.02, rotate: 1 }}
+                >
+                    <div className="scrap-tape top-[-15px] left-[50%] -translate-x-1/2 w-24 h-8 rotate-[-2deg]" />
+                    <div className="absolute -top-6 -left-6 text-6xl rotate-[-15deg]">💡</div>
+                    <h3 className="font-heading-scrap text-3xl md:text-4xl text-gold-muted mb-4 text-center uppercase tracking-wider">The Creative Catalyst</h3>
+                    <p className="font-body-scrap text-parchment text-lg text-center font-bold leading-relaxed">
+                        Data science and engineering isn&apos;t just about syntax; it&apos;s an art form. I blend technical rigor with original, unconventional thinking. That&apos;s the secret to building intelligent systems that feel alive.
+                    </p>
+                    <div className="flex justify-center gap-6 mt-8">
+                        <motion.div whileHover={{ scale: 1.2, rotate: 10 }} className="bg-parchment p-3 border-2 border-ink-black transform -rotate-6 shadow-[4px_4px_0px_#0D0D0D] cursor-help">
+                            <span className="text-3xl">🎨</span>
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.2, rotate: -10 }} className="bg-parchment p-3 border-2 border-ink-black transform rotate-3 shadow-[4px_4px_0px_#0D0D0D] cursor-help">
+                            <span className="text-3xl">🧩</span>
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.2, rotate: 15 }} className="bg-parchment p-3 border-2 border-ink-black transform -rotate-3 shadow-[4px_4px_0px_#0D0D0D] cursor-help">
+                            <span className="text-3xl">⚡</span>
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.2, rotate: -15 }} className="bg-parchment p-3 border-2 border-ink-black transform rotate-6 shadow-[4px_4px_0px_#0D0D0D] cursor-help">
+                            <span className="text-3xl">🚀</span>
+                        </motion.div>
+                    </div>
+                </motion.div>
 
             </div>
 

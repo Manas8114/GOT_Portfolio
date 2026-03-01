@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { achievements } from "@/lib/data";
 import { FadeInView, StaggerContainer, StaggerItem } from "@/components/animations/AnimationUtils";
+import bgImage from "@/public/images/scrolls-ancient.png";
 
 export default function Research() {
     return (
@@ -15,11 +16,12 @@ export default function Research() {
             {/* Background Image */}
             <div className="absolute inset-0 z-0 opacity-15">
                 <Image
-                    src="/images/scrolls-ancient.png"
+                    src={bgImage}
                     alt="Ancient scrolls background"
                     fill
                     className="object-cover"
-                    quality={80}
+                    priority
+                    placeholder="blur"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/90 to-transparent" />
             </div>

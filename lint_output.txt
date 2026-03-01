@@ -1,0 +1,105 @@
+﻿
+> portfolio@0.1.0 lint
+> eslint
+
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\app\page.tsx
+   5:55  warning  'getTabDirection' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  57:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\app\page.tsx:57:7
+  55 |     const initialHash = typeof window !== 'undefined' ? window.location.hash.slice(1) as TabId : null;
+  56 |     if (initialHash && tabs.some((t) => t.id === initialHash)) {
+> 57 |       setActiveTab(initialHash);
+     |       ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  58 |     }
+  59 |
+  60 |     return () => window.removeEventListener("hashchange", handleHashChange);  react-hooks/set-state-in-effect
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\components\SoundSystem.tsx
+  73:13  error  Error: This value cannot be modified
+
+Modifying a value returned from 'useState()', which should not be modified directly. Use the setter function to update instead.
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\components\SoundSystem.tsx:73:13
+  71 |         const audio = audioCache[soundType];
+  72 |         if (audio) {
+> 73 |             audio.currentTime = 0;
+     |             ^^^^^ `audioCache` cannot be modified
+  74 |             audio.play().catch(() => {
+  75 |                 // Autoplay blocked, silent fail
+  76 |             });  react-hooks/immutability
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\components\sections\About.tsx
+  9:7  warning  'StrengthIcon' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\components\sections\Certificates.tsx
+  131:12  warning  'mounted' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  144:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\components\sections\Certificates.tsx:144:9
+  142 |
+  143 |     useEffect(() => {
+> 144 |         setMounted(true);
+      |         ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  145 |         setIsMobile(window.innerWidth <= 768);
+  146 |     }, []);
+  147 |  react-hooks/set-state-in-effect
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\components\sections\Hero.tsx
+   9:12  warning  'mounted' is assigned a value but never used     @typescript-eslint/no-unused-vars
+   9:21  warning  'setMounted' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  20:11  warning  'textY' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\components\sections\Projects.tsx
+  158:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\components\sections\Projects.tsx:158:9
+  156 |
+  157 |     useEffect(() => {
+> 158 |         setMounted(true);
+      |         ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  159 |         setIsMobile(window.innerWidth <= 768);
+  160 |     }, []);
+  161 |  react-hooks/set-state-in-effect
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\components\sections\Skills.tsx
+  126:12  warning  'mounted' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  126:21  warning  'setMounted' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  138:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\msgok\OneDrive\Desktop\Project\portfolio\components\sections\Skills.tsx:138:9
+  136 |
+  137 |     useEffect(() => {
+> 138 |         setIsMobile(window.innerWidth <= 768);
+      |         ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  139 |     }, []);
+  140 |
+  141 |  react-hooks/set-state-in-effect
+
+Γ£û 13 problems (5 errors, 8 warnings)
+
