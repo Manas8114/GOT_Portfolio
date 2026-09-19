@@ -507,6 +507,11 @@ a:hover {
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.polaroid-card.absolute {
+  position: absolute;
+}
+
+
 .polaroid-card::before {
   content: "";
   position: absolute;

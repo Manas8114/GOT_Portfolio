@@ -15,7 +15,7 @@ export const personalInfo = {
     name: "Manas Sharma",
     title: "AI & Machine Learning Researcher",
     tagline: "B.Tech Data Science Undergraduate — Explainable Reinforcement Learning for Intelligent Systems",
-    email: "ms9580@srmist.edu.in",
+    email: "manassharma8114@gmail.com",
     phone: "+91 6265586868",
     github: "https://github.com/Manas8114",
     linkedin: "https://linkedin.com/in/manas8114",
@@ -26,8 +26,9 @@ export const personalInfo = {
         institution: "SRM Institute of Science & Technology",
         startYear: "2022",
         graduationYear: "May 2026",
-        cgpa: "8.33 / 10",
+        cgpa: "8.49 / 10",
         location: "India",
+        admitted: "University College Dublin (UCD) — MSc Data and Computational Science (T306)",
     },
     researchInterests: [
         "Reinforcement Learning",
@@ -39,13 +40,13 @@ export const personalInfo = {
     publications: [
         {
             title: "Reevaluating CNN Filter Dimensions: Experimental Findings on CIFAR-10 and Fashion-MNIST",
-            venue: "ICICV 2026",
-            status: "Accepted for Oral Presentation",
+            venue: "IEEE ICICV 2026",
+            status: "Published (Oral Presentation)",
         },
         {
             title: "Intent-Driven AI-Native Network Slicing for Rural Broadcasting over ATSC 3.0/B2X",
-            venue: "WOCC 2026",
-            status: "Under Review (EDAS)",
+            venue: "IEEE WOCC 2026",
+            status: "Published (IEEE)",
         },
     ],
     researchExperience: [
@@ -458,7 +459,59 @@ export const skills = {
     ],
 };
 
-export const achievements = [
+export interface Achievement {
+    id: string;
+    title: string;
+    type: "research" | "competition" | "experience";
+    description: string;
+    year: string;
+    highlight: boolean;
+    role: string;
+    proof: string;
+    link: string;
+    tech: string[];
+}
+
+export const achievements: Achievement[] = [
+    {
+        id: "itu-buildathon-4",
+        title: "1st Prize - Build-a-thon 4.0, ITU",
+        type: "competition",
+        description:
+            "Developed intent-driven AI-native network slicing for rural ATSC 3.0 broadcasting.",
+        year: "2026",
+        highlight: true,
+        role: "Designed and implemented the RL-based resource allocation engine and intent-driven orchestration pipeline for dynamic slice isolation over ATSC 3.0 physical layer.",
+        proof: "Awarded 1st Place by ITU judges; formulated into IEEE WOCC 2026 peer-reviewed publication.",
+        link: "https://github.com/Manas8114",
+        tech: ["Python", "Reinforcement Learning", "ATSC 3.0", "Network Slicing", "PyTorch"],
+    },
+    {
+        id: "icicv-publication",
+        title: "Publication — IEEE ICICV 2026",
+        type: "research",
+        description:
+            "\"Reevaluating CNN Filter Dimensions: Experimental Findings on CIFAR-10 and Fashion-MNIST\" published for Oral Presentation at IEEE ICICV 2026.",
+        year: "2026",
+        highlight: true,
+        role: "Lead author conducting extensive empirical benchmarking on convolutional kernel sizing, parameter efficiency, and gradient convergence across computer vision datasets.",
+        proof: "Published in IEEE ICICV 2026 Conference Proceedings with Oral Presentation distinction.",
+        link: "https://github.com/Manas8114",
+        tech: ["Deep Learning", "CNN", "PyTorch", "Computer Vision", "Statistical Analysis"],
+    },
+    {
+        id: "wocc-publication",
+        title: "Publication — IEEE WOCC 2026",
+        type: "research",
+        description:
+            "\"Intent-Driven AI-Native Network Slicing for Rural Broadcasting over ATSC 3.0/B2X\" published in IEEE WOCC 2026.",
+        year: "2026",
+        highlight: true,
+        role: "Lead researcher developing intent translation algorithms, QoS traffic routing models, and automated bandwidth prioritization schemes for rural communications.",
+        proof: "Published in IEEE Wireless and Optical Communications Conference (WOCC 2026).",
+        link: "https://github.com/Manas8114",
+        tech: ["AI-Native Networks", "ATSC 3.0", "QoS Optimization", "Simulation", "Python"],
+    },
     {
         id: "buildathon-itu",
         title: "1st Prize - Build-a-thon 3.0 ITU IIT Delhi",
@@ -467,6 +520,10 @@ export const achievements = [
             "Won first place at the ITU Build-a-thon 3.0 held at IIT Delhi for innovative technology solutions.",
         year: "2024",
         highlight: true,
+        role: "Led core architecture design and telemetry modeling, building real-time edge intelligence to allocate congested network channels under extreme constraints.",
+        proof: "Awarded 1st Prize Winner Trophy & Certificate at IIT Delhi ITU National Competition.",
+        link: "https://github.com/Manas8114",
+        tech: ["Machine Learning", "IIT Delhi", "Real-time Telemetry", "FastAPI", "Edge Computing"],
     },
     {
         id: "ai-agentic",
@@ -476,6 +533,10 @@ export const achievements = [
             "Secured second position in the AI Agentic Battle competition for developing advanced AI agent systems.",
         year: "2024",
         highlight: true,
+        role: "Built multi-agent coordination architecture comprising 7 autonomous specialized agents for telecom diagnostics, automated healing, and network routing.",
+        proof: "Secured 2nd Place out of nationwide competitive submissions; production-ready agent architecture.",
+        link: "https://github.com/Manas8114",
+        tech: ["Multi-Agent Systems", "FastAPI", "Python", "Autonomous Agents", "Prompt Engineering"],
     },
     {
         id: "1stop-internship",
@@ -485,33 +546,10 @@ export const achievements = [
             "Built machine learning models for classification and regression problems. Cleaned and manipulated raw data. Used statistical software to analyze large data sets.",
         year: "Jun 2024 - Jul 2024",
         highlight: false,
-    },
-    {
-        id: "itu-buildathon-4",
-        title: "1st Prize - Build-a-thon 4.0, ITU",
-        type: "competition",
-        description:
-            "Developed intent-driven AI-native network slicing for rural ATSC 3.0 broadcasting.",
-        year: "2026",
-        highlight: true,
-    },
-    {
-        id: "icicv-publication",
-        title: "Publication — ICICV 2026",
-        type: "research",
-        description:
-            "\"Reevaluating CNN Filter Dimensions: Experimental Findings on CIFAR-10 and Fashion-MNIST\" accepted for Oral Presentation at IEEE ICICV 2026.",
-        year: "2026",
-        highlight: true,
-    },
-    {
-        id: "wocc-publication",
-        title: "Publication — WOCC 2026",
-        type: "research",
-        description:
-            "\"Intent-Driven AI-Native Network Slicing for Rural Broadcasting over ATSC 3.0/B2X\" submitted for review at IEEE WOCC 2026.",
-        year: "2026",
-        highlight: true,
+        role: "Engineered end-to-end data preprocessing pipelines, performed exploratory data analysis on real-world datasets, and benchmarked ensemble models.",
+        proof: "Verified Internship Completion Certificate & production model delivery.",
+        link: "https://github.com/Manas8114",
+        tech: ["Scikit-learn", "Pandas", "NumPy", "EDA", "Feature Engineering"],
     },
 ];
 
@@ -581,12 +619,6 @@ export const certificates = [
         context: "Comprehensive Java programming covering OOP, data structures, and algorithms.",
     },
     {
-        id: "nptel-elite-top5",
-        title: "Elite Certification (Top 5%)",
-        issuer: "NPTEL",
-        context: "Awarded for exceptional performance among the top 5% candidates in specific NPTEL courses.",
-    },
-    {
         id: "networking-nptel",
         title: "Demystifying Networking",
         issuer: "NPTEL",
@@ -615,41 +647,41 @@ export const strengths = [
     {
         title: "Creative",
         description: "Approaches problems with original thinking and unconventional solutions",
-        icon: "🎨",
+        icon: "palette",
     },
     {
         title: "Relentless",
         description: "Driven by curiosity, pushing until the puzzle clicks and the system works.",
-        icon: "🔥",
+        icon: "flame",
     },
     {
         title: "Strategic",
         description: "Systems thinker mapping the big picture before diving into the code.",
-        icon: "♟️",
+        icon: "compass",
     },
     {
         title: "Adaptive",
         description: "Quickly adapts to new technologies, frameworks, and evolving requirements",
-        icon: "🔄",
+        icon: "refresh",
     },
     {
         title: "Problem-Solving",
         description: "Possesses strong problem-solving skills and technical knowledge in machine learning",
-        icon: "🧩",
+        icon: "puzzle",
     },
     {
         title: "Data Analysis",
         description: "Highly skilled in data analysis and visualization techniques",
-        icon: "📊",
+        icon: "chart",
     },
     {
         title: "Research-Driven",
         description: "Published IEEE researcher with a systematic, evidence-based approach",
-        icon: "📚",
+        icon: "book",
     },
     {
         title: "Visionary",
         description: "Forward-looking, building solutions designed to scale for the long term.",
-        icon: "👁️",
+        icon: "eye",
     },
 ];
