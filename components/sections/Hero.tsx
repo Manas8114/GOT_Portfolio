@@ -1,19 +1,21 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 import { personalInfo } from "@/lib/data";
-import { useState, useEffect } from "react";
 import { useSound } from "@/components/SoundSystem";
+import { useMounted } from "@/lib/useClient";
 
 const CREDENTIALS = [
     { label: "SRM", value: "B.Tech DS" },
-    { label: "GPA", value: "8.33/10" },
+    { label: "GPA", value: "8.49/10" },
+    { label: "UCD", value: "Admitted MSc" },
     { label: "IEEE", value: "Published" },
     { label: "IELTS", value: "Band 6.5" },
 ];
 
 export default function Hero() {
-    const [mounted, setMounted] = useState(false);
+    const mounted = useMounted();
     const { playSound } = useSound();
 
     // Use window-level scroll — no target ref avoids the "ref not hydrated" crash
@@ -22,10 +24,6 @@ export default function Hero() {
     const bgY = useTransform(scrollYProgress, [0, 0.4], ["0%", "5%"]);
     const textY = useTransform(scrollYProgress, [0, 0.4], ["0%", "-10%"]);
     const elementsY = useTransform(scrollYProgress, [0, 0.4], ["0%", "15%"]);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     return (
         <section
@@ -111,8 +109,8 @@ export default function Hero() {
                         className="absolute top-[35%] left-[60%] md:left-[64%] lg:left-[68%] hidden sm:block w-48 md:w-56 p-3 pb-8 bg-parchment pointer-events-auto cursor-grab shadow-2xl border-2 border-charcoal rotate-[8deg]"
                     >
                         <div className="w-full aspect-[4/5] bg-ink-black mb-2 border-2 border-charcoal overflow-hidden relative">
-                            {/* Uses the uploaded profile picture */}
-                            <img src="/images/profile.jpg" alt="Profile collage" className="w-full h-full object-cover filter contrast-125 sepia-[0.2]" draggable={false} />
+                            {/* Uses the optimized webp profile picture */}
+                            <Image src="/images/profile.webp" alt="Profile collage" fill className="object-cover filter contrast-125 sepia-[0.2]" priority draggable={false} sizes="(max-width: 768px) 192px, 224px" />
                             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay pointer-events-none" />
                         </div>
                         <p className="font-heading-scrap text-xl text-ink-black text-center uppercase tracking-widest mt-2">{personalInfo.name.split(' ')[0]}</p>

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Noto_Serif_JP, Inter, Space_Grotesk, Archivo } from "next/font/google";
 import "./globals.css";
 import Cursor from "@/components/Cursor";
-import ContactBadge from "@/components/ContactBadge";
 import LoadingScreen from "@/components/LoadingScreen";
 import StickyNoteCTA from "@/components/StickyNoteCTA";
 
@@ -98,7 +97,6 @@ export default function RootLayout({
         <Cursor />
         {children}
         <StickyNoteCTA />
-        <ContactBadge />
       </body>
     </html>
   );

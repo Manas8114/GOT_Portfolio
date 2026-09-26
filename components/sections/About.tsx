@@ -2,29 +2,24 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { personalInfo, strengths } from "@/lib/data";
-import { Sparkles, Puzzle, BarChart3 } from "lucide-react";
 import { useSound } from "@/components/SoundSystem";
-import { useState, useEffect } from "react";
+import { useIsMobile } from "@/lib/useClient";
+import { Palette, Flame, Compass, RefreshCw, Puzzle, BarChart3, BookOpen, Eye, ExternalLink, type LucideIcon } from "lucide-react";
 
-const StrengthIcon = ({ title, className }: { title: string, className?: string }) => {
-    switch (title) {
-        case "Creativity and Adaptability": return <Sparkles className={className} />;
-        case "Problem-Solving": return <Puzzle className={className} />;
-        case "Data Analysis and Visualization": return <BarChart3 className={className} />;
-        default: return <Sparkles className={className} />;
-    }
+const strengthIconMap: Record<string, LucideIcon> = {
+    palette: Palette,
+    flame: Flame,
+    compass: Compass,
+    refresh: RefreshCw,
+    puzzle: Puzzle,
+    chart: BarChart3,
+    book: BookOpen,
+    eye: Eye,
 };
 
 export default function About() {
     const { playSound } = useSound();
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
+    const isMobile = useIsMobile();
 
     const { scrollYProgress } = useScroll();
 
@@ -68,10 +63,13 @@ export default function About() {
                         <span className="font-bold underline decoration-crimson decoration-4 underline-offset-4">{personalInfo.education.institution}</span>.
                     </p>
 
-                    {/* CGPA + Graduation tag */}
-                    <div className="flex flex-wrap gap-3 mt-4">
+                    {/* CGPA + Graduation tag + Admitted program */}
+                    <div className="flex flex-wrap gap-2.5 mt-4">
                         <span className="font-body-scrap text-sm bg-ink-black text-gold-muted px-3 py-1 font-black border border-ink-black">
                             CGPA: {personalInfo.education.cgpa}
+                        </span>
+                        <span className="font-body-scrap text-sm bg-emerald-800 text-parchment px-3 py-1 font-black border border-ink-black shadow-xs">
+                            ✓ Admitted: UCD Dublin (MSc T306)
                         </span>
                         <span className="font-body-scrap text-sm bg-ink-black text-parchment px-3 py-1 font-black border border-ink-black">
                             Graduating: {personalInfo.education.graduationYear}
@@ -134,26 +132,42 @@ export default function About() {
                     className="bg-parchment p-5 md:p-6 border-4 border-ink-black shadow-[6px_6px_0px_#0D0D0D] max-w-xl mx-4 md:ml-[5%] mb-10 relative cursor-grab z-20 transform md:rotate-[-3deg]"
                 >
                     <div className="scrap-tape top-[-12px] left-[30%] w-20 h-7 rotate-[-5deg]" />
-                    <p className="font-heading-scrap text-xl text-crimson mb-4 uppercase">📄 Publications</p>
-                    {personalInfo.publications.map((pub, i) => (
-                        <div key={i} className="mb-3 last:mb-0">
-                            <p className="font-body-scrap text-sm font-bold text-ink-black leading-snug">
-                                &ldquo;{pub.title}&rdquo;
-                            </p>
-                            <div className="flex flex-wrap gap-2 mt-1">
-                                <span className="font-body-scrap text-[10px] font-black bg-crimson text-parchment px-2 py-0.5 border border-ink-black uppercase">
-                                    {pub.venue}
-                                </span>
-                                <span className="font-body-scrap text-[10px] font-black bg-gold-muted text-ink-black px-2 py-0.5 border border-ink-black uppercase">
-                                    {pub.status}
-                                </span>
+                    <div className="flex items-center gap-2 mb-4 border-b-2 border-charcoal/20 pb-2">
+                        <BookOpen size={20} className="text-crimson" />
+                        <p className="font-heading-scrap text-xl text-crimson uppercase font-bold tracking-wider m-0">
+                            Published Research (IEEE)
+                        </p>
+                    </div>
+                    <div className="space-y-4">
+                        {personalInfo.publications.map((pub, i) => (
+                            <div key={i} className="pb-3 border-b border-dashed border-charcoal/20 last:border-none last:pb-0">
+                                <p className="font-body-scrap text-sm font-bold text-ink-black leading-snug mb-2">
+                                    &ldquo;{pub.title}&rdquo;
+                                </p>
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <span className="font-body-scrap text-[10px] font-black bg-crimson text-parchment px-2.5 py-0.5 border border-ink-black uppercase shadow-xs">
+                                            {pub.venue}
+                                        </span>
+                                        <span className="font-body-scrap text-[10px] font-black bg-emerald-700 text-parchment px-2.5 py-0.5 border border-ink-black uppercase shadow-xs">
+                                            ✓ {pub.status}
+                                        </span>
+                                    </div>
+                                    <a
+                                        href="#battles"
+                                        onClick={() => playSound("click")}
+                                        className="font-heading-scrap text-[11px] text-crimson font-bold uppercase tracking-wider hover:text-ink-black flex items-center gap-1 transition-colors"
+                                    >
+                                        Case File <ExternalLink size={11} />
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </motion.div>
 
                 {/* Strengths scattered like Polaroids */}
-                <div className="relative w-full h-[500px] mt-4 md:mt-0 z-30 flex flex-wrap justify-center items-center gap-4 md:block">
+                <div className="relative w-full min-h-[520px] md:h-[500px] mt-8 md:mt-4 z-30 flex flex-col md:block items-center">
                     {/* Abstract path drawing */}
                     <div className="absolute inset-0 z-0 opacity-40 pointer-events-none hidden md:block">
                         <svg viewBox="0 0 800 400" className="w-full h-full stroke-crimson" fill="none" strokeWidth="4" strokeLinecap="round" strokeDasharray="10 15">
@@ -161,16 +175,19 @@ export default function About() {
                         </svg>
                     </div>
 
-                    <p className="font-heading-scrap text-6xl md:text-8xl text-ink-black absolute top-0 left-0 md:left-20 md:top-20 z-0 opacity-10">THE WARRIOR</p>
+                    <p className="font-heading-scrap text-6xl md:text-8xl text-ink-black absolute top-0 left-0 md:left-20 md:top-12 z-0 opacity-10 select-none">
+                        THE WARRIOR
+                    </p>
 
                     {strengths.slice(0, 3).map((strength, index) => {
+                        const IconComponent = strengthIconMap[strength.icon] || Flame;
                         const positions = [
-                            { top: "10%", left: "5%", mdTop: "5%", mdLeft: "10%" },
-                            { top: "15%", left: "10%", mdTop: "-60%", mdLeft: "40%" },
-                            { top: "20%", left: "5%", mdTop: "42%", mdLeft: "30%" },
+                            { mdTop: "8%", mdLeft: "4%" },
+                            { mdTop: "16%", mdLeft: "37%" },
+                            { mdTop: "6%", mdLeft: "70%" },
                         ];
                         const pos = positions[index] || positions[0];
-                        const rotate = ["-6deg", "8deg", "-4deg"][index] || "-2deg";
+                        const rotate = ["-5deg", "5deg", "-3deg"][index] || "-2deg";
 
                         return (
                             <motion.div
@@ -183,21 +200,24 @@ export default function About() {
                                 }}
                                 drag
                                 onDragStart={() => playSound("click")}
-                                whileDrag={{ scale: 1.15, rotate: (parseInt(rotate) || 0) + 10, cursor: "grabbing", zIndex: 100 }}
-                                dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
-                                initial={{ opacity: 0, scale: 0.5, y: 100 }}
+                                whileDrag={{ scale: 1.12, rotate: (parseInt(rotate) || 0) + 10, cursor: "grabbing", zIndex: 100 }}
+                                dragConstraints={{ left: -150, right: 150, top: -100, bottom: 100 }}
+                                initial={{ opacity: 0, scale: 0.85, y: 30 }}
                                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ type: "spring", delay: index * 0.2 }}
-                                className={`polaroid-card w-64 md:w-72 absolute m-4 md:m-0 cursor-grab z-10 hover:z-50`}
+                                viewport={{ once: true, margin: "-30px" }}
+                                transition={{ type: "spring", stiffness: 260, damping: 20, delay: index * 0.12 }}
+                                className={`polaroid-card absolute w-64 md:w-72 ${isMobile ? "relative mx-auto mb-6" : "absolute"} cursor-grab z-10 hover:z-50`}
                                 style={{
-                                    top: isMobile ? pos.top : pos.mdTop,
-                                    left: isMobile ? pos.left : pos.mdLeft,
-                                    rotate: rotate,
+                                    position: isMobile ? "relative" : "absolute",
+                                    top: isMobile ? "auto" : pos.mdTop,
+                                    left: isMobile ? "auto" : pos.mdLeft,
+                                    rotate: isMobile ? (index % 2 === 0 ? "-2deg" : "2deg") : rotate,
                                 }}
                             >
-                                <div className="bg-charcoal w-full h-40 mb-4 flex items-center justify-center border-2 border-ink-black overflow-hidden relative">
-                                    <span className="text-7xl z-10">{strength.icon}</span>
+                                <div className="bg-charcoal w-full h-36 mb-4 flex items-center justify-center border-2 border-ink-black overflow-hidden relative">
+                                    <div className="p-3.5 rounded-full bg-parchment-muted/10 border border-crimson/30 flex items-center justify-center">
+                                        <IconComponent size={36} className="text-crimson" />
+                                    </div>
                                     <div className="absolute inset-0 opacity-30 mix-blend-overlay pointer-events-none" />
                                 </div>
                                 <h4 className="font-heading-scrap text-xl md:text-2xl text-ink-black mb-2 uppercase">
@@ -209,24 +229,25 @@ export default function About() {
                             </motion.div>
                         );
                     })}
+
+                    {/* Interests Tag placed harmoniously in the strengths cluster */}
+                    <motion.div
+                        drag
+                        dragConstraints={{ left: -100, right: 100, top: -50, bottom: 50 }}
+                        className={`${isMobile ? "relative mt-6 mb-8" : "absolute bottom-[4%] right-[6%]"} bg-crimson p-4 border-2 border-ink-black transform rotate-[6deg] cursor-grab shadow-[6px_6px_0px_#0D0D0D] z-40 w-64`}
+                    >
+                        <div className="scrap-tape top-[-10px] left-[20px] w-20 h-6 rotate-[-12deg]" />
+                        <p className="font-heading-scrap text-lg text-parchment mb-2 uppercase tracking-wide">Beyond the code:</p>
+                        <div className="flex flex-wrap gap-2 text-ink-black">
+                            {personalInfo.interests.map((interest) => (
+                                <span key={interest} className="font-body-scrap text-sm bg-parchment px-2 py-1 font-bold border border-ink-black">
+                                    {interest.toUpperCase()}
+                                </span>
+                            ))}
+                        </div>
+                    </motion.div>
                 </div>
 
-                {/* Interests Tag */}
-                <motion.div
-                    drag
-                    dragConstraints={{ left: -100, right: 100, top: -50, bottom: 50 }}
-                    className="absolute bottom-[2%] right-[5%] md:right-[20%] bg-crimson p-4 border-2 border-ink-black transform rotate-[8deg] cursor-grab shadow-[6px_6px_0px_#0D0D0D] z-40 w-64 md:mt-10"
-                >
-                    <div className="scrap-tape top-[-10px] left-[20px] w-20 h-6 rotate-[-12deg]" />
-                    <p className="font-heading-scrap text-lg text-parchment mb-2 uppercase tracking-wide">Beyond the code:</p>
-                    <div className="flex flex-wrap gap-2 text-ink-black">
-                        {personalInfo.interests.map((interest) => (
-                            <span key={interest} className="font-body-scrap text-sm bg-parchment px-2 py-1 font-bold border border-ink-black">
-                                {interest.toUpperCase()}
-                            </span>
-                        ))}
-                    </div>
-                </motion.div>
 
             </div>
         </section>

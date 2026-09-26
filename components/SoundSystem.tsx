@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
+import { useIsMobile, usePrefersReducedMotion } from "@/lib/useClient";
 
 interface SoundContextType {
     soundEnabled: boolean;
@@ -24,44 +25,25 @@ const sounds: Record<SoundType, string> = {
 
 export function SoundProvider({ children }: { children: ReactNode }) {
     const [soundEnabled, setSoundEnabled] = useState(false);
-    const [audioCache, setAudioCache] = useState<Record<string, HTMLAudioElement>>({});
-    const [isMobile, setIsMobile] = useState(false);
-    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-    useEffect(() => {
-        // Check for mobile
-        setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-
-        // Check for reduced motion preference
-        const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-        setPrefersReducedMotion(mediaQuery.matches);
-
-        const handleChange = (e: MediaQueryListEvent) => {
-            setPrefersReducedMotion(e.matches);
-        };
-
-        mediaQuery.addEventListener("change", handleChange);
-        return () => mediaQuery.removeEventListener("change", handleChange);
-    }, []);
+    const audioCache = useRef<Record<string, HTMLAudioElement>>({});
+    const isMobile = useIsMobile();
+    const prefersReducedMotion = usePrefersReducedMotion();
 
     useEffect(() => {
         // Preload sounds when enabled
         if (soundEnabled && !prefersReducedMotion) {
-            const cache: Record<string, HTMLAudioElement> = {};
             Object.entries(sounds).forEach(([key, url]) => {
                 const audio = new Audio(url);
                 audio.preload = "auto";
                 audio.volume = key === "ambient" ? 0.1 : key === "drag" ? 0.15 : key === "drop" ? 0.4 : 0.3;
-                cache[key] = audio;
+                audioCache.current[key] = audio;
             });
-            setAudioCache(cache);
         }
     }, [soundEnabled, prefersReducedMotion]);
 
     const toggleSound = () => {
         // Don't enable sound on mobile by default
         if (isMobile && !soundEnabled) {
-            // Still allow toggle, but warn
             console.log("Sound enabled on mobile device");
         }
         setSoundEnabled((prev) => !prev);
@@ -70,13 +52,10 @@ export function SoundProvider({ children }: { children: ReactNode }) {
     const playSound = (soundType: SoundType) => {
         if (!soundEnabled || prefersReducedMotion) return;
 
-        const audioNode = audioCache[soundType];
+        const audioNode = audioCache.current[soundType];
         if (audioNode) {
-            // HTMLAudioElement API natively allows currentTime mutation. To satisfy strict ESLint rules
-            // that mistake this block-scoped reference for a React state mutation, clone the node.
-            const clonedAudio = audioNode.cloneNode(true) as HTMLAudioElement;
-            clonedAudio.volume = audioNode.volume;
-            clonedAudio.play().catch(() => {
+            audioNode.currentTime = 0;
+            audioNode.play().catch(() => {
                 // Autoplay blocked, silent fail
             });
         }
